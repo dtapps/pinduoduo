@@ -24,7 +24,7 @@ func (c *Client) request(params map[string]interface{}) (gorequest.Response, err
 
 	// 日志
 	if c.config.PgsqlDb != nil {
-		go c.log.GormMiddlewareCustom(gostring.ToString(params["type"]), request)
+		go c.log.GormMiddlewareCustom(gostring.ToString(params["type"]), request, Version)
 	}
 	if c.config.MongoDb != nil {
 		go c.log.MongoMiddlewareCustom(gostring.ToString(params["type"]), request)
