@@ -18,7 +18,7 @@ func (c *Client) request(ctx context.Context, params map[string]interface{}) (go
 	client.SetParams(params)
 
 	// 发起请求
-	request, err := client.Get()
+	request, err := client.Get(ctx)
 	if err != nil {
 		return gorequest.Response{}, err
 	}
@@ -28,7 +28,7 @@ func (c *Client) request(ctx context.Context, params map[string]interface{}) (go
 		go c.log.GormMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
 	}
 	if c.config.MongoDb != nil {
-		go c.log.MongoMiddlewareCustom(gostring.ToString(params["type"]), request)
+		go c.log.MongoMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
 	}
 
 	return request, err
