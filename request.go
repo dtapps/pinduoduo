@@ -12,7 +12,7 @@ func (c *Client) request(ctx context.Context, params map[string]interface{}) (go
 	c.Sign(params)
 
 	// 创建请求
-	client := c.client
+	client := c.requestClient
 
 	// 设置参数
 	client.SetParams(params)
@@ -24,11 +24,8 @@ func (c *Client) request(ctx context.Context, params map[string]interface{}) (go
 	}
 
 	// 日志
-	if c.config.PgsqlDb != nil {
-		go c.log.GormMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
-	}
-	if c.config.MongoDb != nil {
-		go c.log.MongoMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
+	if c.config.GormClient.Db != nil {
+		go c.logClient.GormMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
 	}
 
 	return request, err
