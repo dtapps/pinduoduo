@@ -24,10 +24,10 @@ func (c *Client) request(ctx context.Context, params map[string]interface{}) (go
 	}
 
 	// 日志
-	if c.log.gorm == true {
+	if c.log.gorm {
 		go c.log.logGormClient.GormMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
 	}
-	if c.log.mongo == true {
+	if c.log.mongo {
 		go c.log.logMongoClient.GormMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
 	}
 
