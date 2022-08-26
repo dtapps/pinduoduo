@@ -54,7 +54,7 @@ func newGoodsPromotionUrlGenerateResult(result GoodsPromotionUrlGenerateResponse
 func (c *Client) GoodsPromotionUrlGenerate(ctx context.Context, notMustParams ...Params) *GoodsPromotionUrlGenerateResult {
 	// 参数
 	params := NewParamsWithType("pdd.ddk.goods.promotion.url.generate", notMustParams...)
-	params.Set("p_id", c.config.Pid)
+	params.Set("p_id", c.GetPid())
 	// 请求
 	request, err := c.request(ctx, params)
 	// 定义

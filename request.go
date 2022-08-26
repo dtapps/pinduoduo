@@ -24,8 +24,11 @@ func (c *Client) request(ctx context.Context, params map[string]interface{}) (go
 	}
 
 	// 日志
-	if c.config.GormClient.Db != nil {
-		go c.logClient.GormMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
+	if c.log.gorm == true {
+		go c.log.logGormClient.GormMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
+	}
+	if c.log.mongo == true {
+		go c.log.logMongoClient.GormMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
 	}
 
 	return request, err
