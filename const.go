@@ -8,4 +8,4 @@ const (
 	logTable = "pinduoduo"
 )
 
-const Version = "1.0.9"
+const Version = "1.0.10"
