@@ -1,5 +1,7 @@
 package pinduoduo
 
+import "go.dtapp.net/golog"
+
 func (c *Client) GetClientId() string {
 	return c.config.clientId
 }
@@ -14,4 +16,12 @@ func (c *Client) GetMediaId() string {
 
 func (c *Client) GetPid() string {
 	return c.config.pid
+}
+
+func (c *Client) GetLogGorm() *golog.ApiClient {
+	return c.log.logGormClient
+}
+
+func (c *Client) GetLogMongo() *golog.ApiClient {
+	return c.log.logMongoClient
 }
