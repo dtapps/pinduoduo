@@ -1,7 +1,10 @@
 package pinduoduo
 
 const (
-	apiUrl   = "https://gw-api.pinduoduo.com/api/router"
-	logTable = "pinduoduo"
-	Version  = "1.0.16"
+	apiUrl = "https://gw-api.pinduoduo.com/api/router"
+)
+
+const (
+	LogTable = "pinduoduo"
+	Version  = "1.0.17"
 )

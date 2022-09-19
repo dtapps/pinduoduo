@@ -25,10 +25,7 @@ func (c *Client) request(ctx context.Context, params map[string]interface{}) (go
 
 	// 日志
 	if c.log.gorm {
-		go c.log.logGormClient.GormMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
-	}
-	if c.log.mongo {
-		go c.log.logMongoClient.MongoMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
+		go c.log.client.GormMiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
 	}
 
 	return request, err
