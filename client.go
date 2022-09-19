@@ -16,7 +16,7 @@ type ClientConfig struct {
 	ClientSecret     string             // POP分配给应用的client_secret
 	MediaId          string             // 媒体ID
 	Pid              string             // 推广位
-	apiGormClientFun golog.ApiClientFun // 日志配置
+	ApiGormClientFun golog.ApiClientFun // 日志配置
 	Debug            bool               // 日志开关
 	ZapLog           *golog.ZapLog      // 日志服务
 	CurrentIp        string             // 当前ip
@@ -56,7 +56,7 @@ func NewClient(config *ClientConfig) (*Client, error) {
 	c.requestClient = gorequest.NewHttp()
 	c.requestClient.Uri = apiUrl
 
-	apiGormClient := config.apiGormClientFun()
+	apiGormClient := config.ApiGormClientFun()
 	if apiGormClient != nil {
 		c.log.client = apiGormClient
 		c.log.gorm = true
