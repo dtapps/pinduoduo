@@ -18,6 +18,6 @@ func (c *Client) GetPid() string {
 	return c.config.pid
 }
 
-func (c *Client) GetLogGorm() *golog.ApiClient {
+func (c *Client) GetLog() *golog.ApiClient {
 	return c.log.client
 }
