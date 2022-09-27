@@ -34,6 +34,11 @@ type GoodsPromotionUrlGenerateResponse struct {
 				UserName          string `json:"user_name,omitempty"`           // 用户名
 				WeAppIconUrl      string `json:"we_app_icon_url,omitempty"`     // 小程序图片
 			} `json:"we_app_info"`
+			WeixinCode           string `json:"weixin_code"`
+			WeAppWebViewUrl      string `json:"we_app_web_view_url"`
+			WeAppWebViewShortUrl string `json:"we_app_web_view_short_url"`
+			TzSchemaUrl          string `json:"tz_schema_url"`
+			WeixinShortLink      string `json:"weixin_short_link"`
 		} `json:"goods_promotion_url_list"`
 	} `json:"goods_promotion_url_generate_response"`
 }
