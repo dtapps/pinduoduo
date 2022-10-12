@@ -6,7 +6,7 @@ const (
 
 const (
 	LogTable = "pinduoduo"
-	Version  = "1.0.21"
+	Version  = "1.0.22"
 )
 
 type ApiErrorT struct {

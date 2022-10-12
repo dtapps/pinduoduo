@@ -2,8 +2,8 @@ package pinduoduo
 
 import (
 	"context"
+	"fmt"
 	"go.dtapp.net/gorequest"
-	"go.dtapp.net/gostring"
 )
 
 func (c *Client) request(ctx context.Context, params map[string]interface{}) (gorequest.Response, error) {
@@ -25,7 +25,7 @@ func (c *Client) request(ctx context.Context, params map[string]interface{}) (go
 
 	// 日志
 	if c.log.status {
-		go c.log.client.MiddlewareCustom(ctx, gostring.ToString(params["type"]), request, Version)
+		go c.log.client.MiddlewareCustom(ctx, fmt.Sprintf("%s", params["type"]), request, Version)
 	}
 
 	return request, err
