@@ -13,5 +13,5 @@
 #### 安装
 
 ```go
-go get -v -u go.dtapp.net/pinduoduo
+go get -v -u go.dtapp.net/pinduoduo@v1.0.23
 ```

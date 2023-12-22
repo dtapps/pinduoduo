@@ -6,10 +6,10 @@ import (
 	"go.dtapp.net/gorequest"
 )
 
-type OrderDetailGetResponse struct {
-	OrderDetailResponse struct {
+type PddDdkOauthPidMediaIdBindResponse struct {
+	OrderMediaIdBindResponse struct {
 		SepMarketFee          int    `json:"sep_market_fee"`
-		GoodsPrice            int    `json:"goods_price"`
+		PidPrice              int    `json:"Pid_price"`
 		SepDuoId              int    `json:"sep_duo_id"`
 		Pid                   string `json:"pid"`
 		PromotionRate         int    `json:"promotion_rate"`
@@ -28,18 +28,18 @@ type OrderDetailGetResponse struct {
 		OrderModifyAt         int    `json:"order_modify_at"`
 		AuthDuoId             int    `json:"auth_duo_id"`
 		CpaNew                int    `json:"cpa_new"`
-		GoodsName             string `json:"goods_name"`
+		PidName               string `json:"Pid_name"`
 		BatchNo               string `json:"batch_no"`
 		RedPacketType         int    `json:"red_packet_type"`
 		UrlLastGenerateTime   int    `json:"url_last_generate_time"`
-		GoodsQuantity         int    `json:"goods_quantity"`
-		GoodsId               int64  `json:"goods_id"`
+		PidQuantity           int    `json:"Pid_quantity"`
+		PidId                 int64  `json:"Pid_id"`
 		SepParameters         string `json:"sep_parameters"`
 		SepRate               int    `json:"sep_rate"`
 		SubsidyType           int    `json:"subsidy_type"`
 		ShareRate             int    `json:"share_rate"`
 		CustomParameters      string `json:"custom_parameters"`
-		GoodsThumbnailUrl     string `json:"goods_thumbnail_url"`
+		PidThumbnailUrl       string `json:"Pid_thumbnail_url"`
 		PromotionAmount       int64  `json:"promotion_amount"`
 		OrderPayTime          int    `json:"order_pay_time"`
 		GroupId               int64  `json:"group_id"`
@@ -47,36 +47,36 @@ type OrderDetailGetResponse struct {
 		ReturnStatus          int    `json:"return_status"`
 		OrderStatusDesc       string `json:"order_status_desc"`
 		ShareAmount           int    `json:"share_amount"`
-		GoodsCategoryName     string `json:"goods_category_name"`
+		PidCategoryName       string `json:"Pid_category_name"`
 		RequestId             string `json:"request_id"`
-		GoodsSign             string `json:"goods_sign"`
+		PidSign               string `json:"Pid_sign"`
 		OrderSn               string `json:"order_sn"`
 		ZsDuoId               int    `json:"zs_duo_id"`
-	} `json:"order_detail_response"`
+	} `json:"order_MediaIdBind_response"`
 }
 
-type OrderDetailGetResult struct {
-	Result OrderDetailGetResponse // 结果
-	Body   []byte                 // 内容
-	Http   gorequest.Response     // 请求
+type PddDdkOauthPidMediaIdBindResult struct {
+	Result PddDdkOauthPidMediaIdBindResponse // 结果
+	Body   []byte                            // 内容
+	Http   gorequest.Response                // 请求
 }
 
-func newOrderDetailGetResult(result OrderDetailGetResponse, body []byte, http gorequest.Response) *OrderDetailGetResult {
-	return &OrderDetailGetResult{Result: result, Body: body, Http: http}
+func newPddDdkOauthPidMediaIdBindResult(result PddDdkOauthPidMediaIdBindResponse, body []byte, http gorequest.Response) *PddDdkOauthPidMediaIdBindResult {
+	return &PddDdkOauthPidMediaIdBindResult{Result: result, Body: body, Http: http}
 }
 
-// OrderDetailGet 多多进宝商品查询 https://jinbao.pinduoduo.com/third-party/api-detail?apiName=pdd.ddk.order.detail.get
-func (c *Client) OrderDetailGet(ctx context.Context, orderSn string, notMustParams ...gorequest.Params) (*OrderDetailGetResult, error) {
+// MediaIdBind 批量绑定推广位的媒体id
+// https://jinbao.pinduoduo.com/third-party/api-detail?apiName=pdd.ddk.oauth.pid.mediaid.bind
+func (c *PddDdkOauthPidApi) MediaIdBind(ctx context.Context, notMustParams ...gorequest.Params) (*PddDdkOauthPidMediaIdBindResult, error) {
 	// 参数
-	params := NewParamsWithType("pdd.ddk.order.detail.get", notMustParams...)
-	params.Set("order_sn", orderSn)
+	params := NewParamsWithType("pdd.ddk.oauth.pid.mediaid.bind", notMustParams...)
 	// 请求
-	request, err := c.request(ctx, params)
+	request, err := c.client.request(ctx, params)
 	if err != nil {
-		return newOrderDetailGetResult(OrderDetailGetResponse{}, request.ResponseBody, request), err
+		return newPddDdkOauthPidMediaIdBindResult(PddDdkOauthPidMediaIdBindResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
-	var response OrderDetailGetResponse
+	var response PddDdkOauthPidMediaIdBindResponse
 	err = gojson.Unmarshal(request.ResponseBody, &response)
-	return newOrderDetailGetResult(response, request.ResponseBody, request), err
+	return newPddDdkOauthPidMediaIdBindResult(response, request.ResponseBody, request), err
 }

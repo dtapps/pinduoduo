@@ -6,16 +6,19 @@ import (
 	"go.dtapp.net/gorequest"
 )
 
-func (c *Client) request(ctx context.Context, params map[string]interface{}) (gorequest.Response, error) {
+func (c *Client) request(ctx context.Context, param gorequest.Params) (gorequest.Response, error) {
 
 	// 签名
-	c.Sign(params)
+	c.Sign(param)
 
 	// 创建请求
-	client := c.requestClient
+	client := gorequest.NewHttp()
 
 	// 设置参数
-	client.SetParams(params)
+	client.SetParams(param)
+
+	// 设置用户代理
+	client.SetUserAgent(gorequest.GetRandomUserAgentSystem())
 
 	// 发起请求
 	request, err := client.Get(ctx)
@@ -24,8 +27,8 @@ func (c *Client) request(ctx context.Context, params map[string]interface{}) (go
 	}
 
 	// 日志
-	if c.log.status {
-		go c.log.client.MiddlewareCustom(ctx, fmt.Sprintf("%s", params["type"]), request, Version)
+	if c.gormLog.status {
+		go c.gormLog.client.MiddlewareCustom(ctx, fmt.Sprintf("%s", param.Get("type")), request)
 	}
 
 	return request, err

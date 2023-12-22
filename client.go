@@ -3,7 +3,6 @@ package pinduoduo
 import (
 	"go.dtapp.net/godecimal"
 	"go.dtapp.net/golog"
-	"go.dtapp.net/gorequest"
 	"strings"
 )
 
@@ -17,16 +16,15 @@ type ClientConfig struct {
 
 // Client 实例
 type Client struct {
-	requestClient *gorequest.App // 请求服务
-	config        struct {
+	config struct {
 		clientId     string // POP分配给应用的client_id
 		clientSecret string // POP分配给应用的client_secret
 		mediaId      string // 媒体ID
 		pid          string // 推广位
 	}
-	log struct {
-		status bool             // 状态
-		client *golog.ApiClient // 日志服务
+	gormLog struct {
+		status bool           // 状态
+		client *golog.ApiGorm // 日志服务
 	}
 }
 
@@ -39,9 +37,6 @@ func NewClient(config *ClientConfig) (*Client, error) {
 	c.config.clientSecret = config.ClientSecret
 	c.config.mediaId = config.MediaId
 	c.config.pid = config.Pid
-
-	c.requestClient = gorequest.NewHttp()
-	c.requestClient.Uri = apiUrl
 
 	return c, nil
 }

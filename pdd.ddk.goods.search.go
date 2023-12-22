@@ -2,7 +2,7 @@ package pinduoduo
 
 import (
 	"context"
-	"encoding/json"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 )
 
@@ -85,23 +85,25 @@ type GoodsSearchResult struct {
 	Result GoodsSearchResponse // 结果
 	Body   []byte              // 内容
 	Http   gorequest.Response  // 请求
-	Err    error               // 错误
 }
 
-func newGoodsSearchResult(result GoodsSearchResponse, body []byte, http gorequest.Response, err error) *GoodsSearchResult {
-	return &GoodsSearchResult{Result: result, Body: body, Http: http, Err: err}
+func newGoodsSearchResult(result GoodsSearchResponse, body []byte, http gorequest.Response) *GoodsSearchResult {
+	return &GoodsSearchResult{Result: result, Body: body, Http: http}
 }
 
 // GoodsSearch 多多进宝商品查询
 // https://jinbao.pinduoduo.com/third-party/api-detail?apiName=pdd.ddk.goods.search
-func (c *Client) GoodsSearch(ctx context.Context, notMustParams ...Params) *GoodsSearchResult {
+func (c *Client) GoodsSearch(ctx context.Context, notMustParams ...gorequest.Params) (*GoodsSearchResult, error) {
 	// 参数
 	params := NewParamsWithType("pdd.ddk.goods.search", notMustParams...)
 	params.Set("pid", c.GetPid())
 	// 请求
 	request, err := c.request(ctx, params)
+	if err != nil {
+		return newGoodsSearchResult(GoodsSearchResponse{}, request.ResponseBody, request), err
+	}
 	// 定义
 	var response GoodsSearchResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	return newGoodsSearchResult(response, request.ResponseBody, request, err)
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newGoodsSearchResult(response, request.ResponseBody, request), err
 }

@@ -1,33 +1,25 @@
 package pinduoduo
 
 import (
-	"encoding/json"
-	"net/url"
+	"go.dtapp.net/gorequest"
+	"go.dtapp.net/gostring"
 	"sort"
 	"strconv"
 	"time"
 )
 
-// Params 请求参数
-type Params map[string]interface{}
-
-func NewParams() Params {
-	p := make(Params)
-	return p
-}
-
-func NewParamsWithType(_type string, params ...Params) Params {
-	p := make(Params)
-	p["type"] = _type
-	p["timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
+func NewParamsWithType(_type string, params ...gorequest.Params) gorequest.Params {
+	p := gorequest.NewParamsWith(params...)
+	p.Set("type", _type)
+	p.Set("timestamp", strconv.FormatInt(time.Now().Unix(), 10))
 	for _, v := range params {
 		p.SetParams(v)
 	}
 	return p
 }
 
-func (c *Client) Sign(p Params) {
-	p["client_id"] = c.GetClientId()
+func (c *Client) Sign(p gorequest.Params) {
+	p.Set("client_id", c.GetClientId())
 	// 排序所有的 key
 	var keys []string
 	for key := range p {
@@ -36,55 +28,22 @@ func (c *Client) Sign(p Params) {
 	sort.Strings(keys)
 	signStr := c.GetClientSecret()
 	for _, key := range keys {
-		signStr += key + getString(p[key])
+		signStr += key + gostring.GetString(p.Get(key))
 	}
 	signStr += c.GetClientSecret()
-	p["sign"] = createSign(signStr)
+	p.Set("sign", createSign(signStr))
 }
 
-func (p Params) Set(key string, value interface{}) {
-	p[key] = value
-}
-
-func (p Params) SetParams(params Params) {
-	for key, value := range params {
-		p[key] = value
-	}
-}
-
-func (p Params) SetCustomParameters(uid string, sid string) {
-	p["custom_parameters"] = map[string]interface{}{
+func SetCustomParameters(p gorequest.Params, uid string, sid string) gorequest.Params {
+	p.Set("custom_parameters", map[string]interface{}{
 		"uid": uid,
 		"sid": sid,
-	}
+	})
+	return p
 }
 
 // SetGoodsSignList 设置商品goodsSign列表
-func (p Params) SetGoodsSignList(goodsSign string) {
-	p["goods_sign_list"] = []string{goodsSign}
-}
-
-func (p Params) GetQuery() string {
-	u := url.Values{}
-	for k, v := range p {
-		u.Set(k, getString(v))
-	}
-	return u.Encode()
-}
-
-func getString(i interface{}) string {
-	switch v := i.(type) {
-	case string:
-		return v
-	case []byte:
-		return string(v)
-	case int:
-		return strconv.Itoa(v)
-	case bool:
-		return strconv.FormatBool(v)
-	default:
-
-		bytes, _ := json.Marshal(v)
-		return string(bytes)
-	}
+func SetGoodsSignList(p gorequest.Params, goodsSign string) gorequest.Params {
+	p.Set("goods_sign_list", []string{goodsSign})
+	return p
 }

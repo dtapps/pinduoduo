@@ -6,7 +6,7 @@ import (
 	"go.dtapp.net/gorequest"
 )
 
-type OrderDetailGetResponse struct {
+type PddDdkOauthGoodsPidQueryResponse struct {
 	OrderDetailResponse struct {
 		SepMarketFee          int    `json:"sep_market_fee"`
 		GoodsPrice            int    `json:"goods_price"`
@@ -55,28 +55,28 @@ type OrderDetailGetResponse struct {
 	} `json:"order_detail_response"`
 }
 
-type OrderDetailGetResult struct {
-	Result OrderDetailGetResponse // 结果
-	Body   []byte                 // 内容
-	Http   gorequest.Response     // 请求
+type PddDdkOauthGoodsPidQueryResult struct {
+	Result PddDdkOauthGoodsPidQueryResponse // 结果
+	Body   []byte                           // 内容
+	Http   gorequest.Response               // 请求
 }
 
-func newOrderDetailGetResult(result OrderDetailGetResponse, body []byte, http gorequest.Response) *OrderDetailGetResult {
-	return &OrderDetailGetResult{Result: result, Body: body, Http: http}
+func newPddDdkOauthGoodsPidQueryResult(result PddDdkOauthGoodsPidQueryResponse, body []byte, http gorequest.Response) *PddDdkOauthGoodsPidQueryResult {
+	return &PddDdkOauthGoodsPidQueryResult{Result: result, Body: body, Http: http}
 }
 
-// OrderDetailGet 多多进宝商品查询 https://jinbao.pinduoduo.com/third-party/api-detail?apiName=pdd.ddk.order.detail.get
-func (c *Client) OrderDetailGet(ctx context.Context, orderSn string, notMustParams ...gorequest.Params) (*OrderDetailGetResult, error) {
+// PidQuery 多多客已生成推广位信息查询
+// https://jinbao.pinduoduo.com/third-party/api-detail?apiName=pdd.ddk.oauth.goods.pid.query
+func (c *PddDdkOauthGoodsApi) PidQuery(ctx context.Context, notMustParams ...gorequest.Params) (*PddDdkOauthGoodsPidQueryResult, error) {
 	// 参数
-	params := NewParamsWithType("pdd.ddk.order.detail.get", notMustParams...)
-	params.Set("order_sn", orderSn)
+	params := NewParamsWithType("pdd.ddk.oauth.goods.pid.query", notMustParams...)
 	// 请求
-	request, err := c.request(ctx, params)
+	request, err := c.client.request(ctx, params)
 	if err != nil {
-		return newOrderDetailGetResult(OrderDetailGetResponse{}, request.ResponseBody, request), err
+		return newPddDdkOauthGoodsPidQueryResult(PddDdkOauthGoodsPidQueryResponse{}, request.ResponseBody, request), err
 	}
 	// 定义
-	var response OrderDetailGetResponse
+	var response PddDdkOauthGoodsPidQueryResponse
 	err = gojson.Unmarshal(request.ResponseBody, &response)
-	return newOrderDetailGetResult(response, request.ResponseBody, request), err
+	return newPddDdkOauthGoodsPidQueryResult(response, request.ResponseBody, request), err
 }

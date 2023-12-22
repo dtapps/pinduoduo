@@ -2,7 +2,7 @@ package pinduoduo
 
 import (
 	"context"
-	"encoding/json"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 )
 
@@ -63,22 +63,24 @@ type OrderListRangeGetResult struct {
 	Result OrderListRangeGetResponse // 结果
 	Body   []byte                    // 内容
 	Http   gorequest.Response        // 请求
-	Err    error                     // 错误
 }
 
-func newOrderListRangeGetResult(result OrderListRangeGetResponse, body []byte, http gorequest.Response, err error) *OrderListRangeGetResult {
-	return &OrderListRangeGetResult{Result: result, Body: body, Http: http, Err: err}
+func newOrderListRangeGetResult(result OrderListRangeGetResponse, body []byte, http gorequest.Response) *OrderListRangeGetResult {
+	return &OrderListRangeGetResult{Result: result, Body: body, Http: http}
 }
 
 // OrderListRangeGet 用时间段查询推广订单接口
 // https://jinbao.pinduoduo.com/third-party/api-detail?apiName=pdd.ddk.order.list.range.get
-func (c *Client) OrderListRangeGet(ctx context.Context, notMustParams ...Params) *OrderListRangeGetResult {
+func (c *Client) OrderListRangeGet(ctx context.Context, notMustParams ...gorequest.Params) (*OrderListRangeGetResult, error) {
 	// 参数
 	params := NewParamsWithType("pdd.ddk.order.list.range.get", notMustParams...)
 	// 请求
 	request, err := c.request(ctx, params)
+	if err != nil {
+		return newOrderListRangeGetResult(OrderListRangeGetResponse{}, request.ResponseBody, request), err
+	}
 	// 定义
 	var response OrderListRangeGetResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	return newOrderListRangeGetResult(response, request.ResponseBody, request, err)
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newOrderListRangeGetResult(response, request.ResponseBody, request), err
 }

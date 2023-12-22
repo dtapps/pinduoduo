@@ -2,7 +2,7 @@ package pinduoduo
 
 import (
 	"context"
-	"encoding/json"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 )
 
@@ -21,24 +21,25 @@ type GoodsOptGetResult struct {
 	Result GoodsOptGetResponse // 结果
 	Body   []byte              // 内容
 	Http   gorequest.Response  // 请求
-	Err    error               // 错误
 }
 
-func newGoodsOptGetResult(result GoodsOptGetResponse, body []byte, http gorequest.Response, err error) *GoodsOptGetResult {
-	return &GoodsOptGetResult{Result: result, Body: body, Http: http, Err: err}
+func newGoodsOptGetResult(result GoodsOptGetResponse, body []byte, http gorequest.Response) *GoodsOptGetResult {
+	return &GoodsOptGetResult{Result: result, Body: body, Http: http}
 }
 
 // GoodsOptGet 查询商品标签列表
 // https://open.pinduoduo.com/application/document/api?id=pdd.goods.opt.get
-func (c *Client) GoodsOptGet(ctx context.Context, parentOptId int) *GoodsOptGetResult {
+func (c *Client) GoodsOptGet(ctx context.Context, parentOptId int, notMustParams ...gorequest.Params) (*GoodsOptGetResult, error) {
 	// 参数
-	param := NewParams()
-	param.Set("parent_opt_id", parentOptId)
-	params := NewParamsWithType("pdd.goods.opt.get", param)
+	params := NewParamsWithType("pdd.goods.opt.get", notMustParams...)
+	params.Set("parent_opt_id", parentOptId)
 	// 请求
 	request, err := c.request(ctx, params)
+	if err != nil {
+		return newGoodsOptGetResult(GoodsOptGetResponse{}, request.ResponseBody, request), err
+	}
 	// 定义
 	var response GoodsOptGetResponse
-	err = json.Unmarshal(request.ResponseBody, &response)
-	return newGoodsOptGetResult(response, request.ResponseBody, request, err)
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	return newGoodsOptGetResult(response, request.ResponseBody, request), err
 }
