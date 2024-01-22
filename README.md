@@ -2,7 +2,7 @@
 <a href="https://www.dtapp.net/">Golang</a>
 </h1>
 
-📦 Golang PinDuoDuo
+📦 Golang 拼多多
 
 [comment]: <> (go)
 [![godoc](https://pkg.go.dev/badge/go.dtapp.net/pinduoduo?status.svg)](https://pkg.go.dev/go.dtapp.net/pinduoduo)
@@ -13,5 +13,5 @@
 #### 安装
 
 ```go
-go get -v -u go.dtapp.net/pinduoduo@v1.0.23
+go get -v -u go.dtapp.net/pinduoduo@v1.0.24
 ```

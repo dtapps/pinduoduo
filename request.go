@@ -30,6 +30,9 @@ func (c *Client) request(ctx context.Context, param gorequest.Params) (gorequest
 	if c.gormLog.status {
 		go c.gormLog.client.MiddlewareCustom(ctx, fmt.Sprintf("%s", param.Get("type")), request)
 	}
+	if c.mongoLog.status {
+		go c.mongoLog.client.MiddlewareCustom(ctx, fmt.Sprintf("%s", param.Get("type")), request)
+	}
 
 	return request, err
 }
