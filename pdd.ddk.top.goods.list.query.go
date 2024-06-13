@@ -2,7 +2,6 @@ package pinduoduo
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 )
 
@@ -60,16 +59,17 @@ func newTopGoodsListQueryResult(result TopGoodsListQueryResponse, body []byte, h
 // TopGoodsListQuery 多多客获取爆款排行商品接口
 // https://jinbao.pinduoduo.com/third-party/api-detail?apiName=pdd.ddk.top.goods.list.query
 func (c *Client) TopGoodsListQuery(ctx context.Context, notMustParams ...gorequest.Params) (*TopGoodsListQueryResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "pdd.ddk.top.goods.list.query")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := NewParamsWithType("pdd.ddk.top.goods.list.query", notMustParams...)
 	params.Set("p_id", c.GetPid())
+
 	// 请求
-	request, err := c.request(ctx, params)
-	if err != nil {
-		return newTopGoodsListQueryResult(TopGoodsListQueryResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response TopGoodsListQueryResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, params, &response)
 	return newTopGoodsListQueryResult(response, request.ResponseBody, request), err
 }

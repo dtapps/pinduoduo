@@ -2,7 +2,6 @@ package pinduoduo
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
 )
 
@@ -80,16 +79,17 @@ func newGoodsRecommendGetResult(result GoodsRecommendGetResponse, body []byte, h
 // GoodsRecommendGet 多多进宝商品推荐API
 // https://jinbao.pinduoduo.com/third-party/api-detail?apiName=pdd.ddk.goods.recommend.get
 func (c *Client) GoodsRecommendGet(ctx context.Context, notMustParams ...gorequest.Params) (*GoodsRecommendGetResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "pdd.ddk.goods.recommend.get")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := NewParamsWithType("pdd.ddk.goods.recommend.get", notMustParams...)
 	params.Set("pid", c.GetPid())
+
 	// 请求
-	request, err := c.request(ctx, params)
-	if err != nil {
-		return newGoodsRecommendGetResult(GoodsRecommendGetResponse{}, request.ResponseBody, request), err
-	}
-	// 定义
 	var response GoodsRecommendGetResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
+	request, err := c.request(ctx, params, &response)
 	return newGoodsRecommendGetResult(response, request.ResponseBody, request), err
 }
