@@ -6,21 +6,13 @@ func (c *Client) GetClientId() string {
 	return c.config.clientId
 }
 
-func (c *Client) GetClientSecret() string {
-	return c.config.clientSecret
-}
-
-func (c *Client) GetMediaId() string {
-	return c.config.mediaId
-}
-
-func (c *Client) GetPid() string {
-	return c.config.pid
-}
-
 func (c *Client) SetClientId(v string) *Client {
 	c.config.clientId = v
 	return c
+}
+
+func (c *Client) GetClientSecret() string {
+	return c.config.clientSecret
 }
 
 func (c *Client) SetClientSecret(v string) *Client {
@@ -28,9 +20,17 @@ func (c *Client) SetClientSecret(v string) *Client {
 	return c
 }
 
+func (c *Client) GetMediaId() string {
+	return c.config.mediaId
+}
+
 func (c *Client) SetMediaId(v string) *Client {
 	c.config.mediaId = v
 	return c
+}
+
+func (c *Client) GetPid() string {
+	return c.config.pid
 }
 
 func (c *Client) SetPid(v string) *Client {
